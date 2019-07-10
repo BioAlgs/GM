@@ -4,26 +4,38 @@
 \alias{gm}
 \title{Gaussian Mirrors for Controlled Variable Selection}
 \usage{
-gm(y, x, family = "gaussian", ncores = 1)
+gm(y, x, q = 0.1, family = "gaussian", ncores = 1, rep.boot = 100,
+  var.est = FALSE)
 }
 \arguments{
-\item{y}{response variable}
+\item{y}{response variable. Quantitative for family="gaussian", or family="poisson" (non-negative counts). For family="binomial" should be either a factor with two levels.}
 
-\item{x}{predictor variables}
+\item{x}{input design matrix of dimension n x p; each row is an observation vector.}
 
-\item{family}{}
+\item{q}{target FDR level. The default value is 0.1.}
 
-\item{q}{target FDR level}
+\item{family}{response type.}
+
+\item{ncores}{number of cores used for parallel computation of the GM_1 to GM_p. We recommend to use multiple cores which will greatly reduce the computational time.}
+
+\item{rep.boot}{the size of bootstrap sample for estimating the variance of FDR.}
+
+\item{var.est}{logical flag for estimating the variance of FDR. The default value is FALSE.}
+
+\item{nlambda}{The number of lambda values. The default is 100.}
 }
 \value{
-result: the index of selected variable
+gm_selected: the index of selected variable.
 
+gm_statistics: the value for mirror statistics.
 
+gm_var: if the var.est=TRUE, return the estimated variance of FDR.
 }
 \description{
 Gaussian Mirrors for Controlled Variable Selection
 }
 \examples{
+\donttest{}
 gm(y, x)
 
 }
@@ -31,7 +43,10 @@ gm(y, x)
 \url{}
 }
 \author{
-Xin Xing, \email{xin_xing@stat.harvard.edu}
+Xin Xing, \email{xin_xing@fas.harvard.edu}
 }
-\keyword{selection}
+\keyword{fdr}
+\keyword{gaussian}
+\keyword{mirror,}
+\keyword{selection,}
 \keyword{variable}

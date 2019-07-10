@@ -9,8 +9,8 @@ Authors@R: c(person("Xin Xing", "Developer", role = c("aut", "cre"),
                      email = "A.User@whereever.net"))
 Author: Xin Xing [aut, cre],
 Maintainer: Xin Xing <xin_xing@fas.harvard.edu>
-Depends: R (>= 3.1.0), MASS, glmnet
-Suggests: MASS, glmnet
+Depends: R (>= 3.1.0), MASS, glmnet, doParallel, foreach
+Suggests: 
 Description: GM package is designed for selecting variable while controlling the false discorvery rate under target threshold. 
 License: GPL (>= 2)
 URL: xin.xing.com
