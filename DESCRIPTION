@@ -1,0 +1,18 @@
+Package: GM
+Version: 0.1
+Date: 2019-06-01
+Title: Gaussian Mirror for High-dimensional Controled Variable Selection
+Authors@R: c(person("Xin Xing", "Developer", role = c("aut", "cre"),
+                     email = "xin_xing@fas.harvard.edu"),
+              person("Pat", "Developer", role = "aut"),
+              person("A.", "User", role = "ctb",
+                     email = "A.User@whereever.net"))
+Author: Xin Xing [aut, cre],
+Maintainer: Xin Xing <xin_xing@fas.harvard.edu>
+Depends: R (>= 3.1.0), MASS, glmnet
+Suggests: MASS, glmnet
+Description: GM package is designed for selecting variable while controlling the false discorvery rate under target threshold. 
+License: GPL (>= 2)
+URL: xin.xing.com
+Encoding: UTF-8
+RoxygenNote: 6.1.1
