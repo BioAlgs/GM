@@ -3,7 +3,7 @@
 
 ## Installation
 ```R
-install_github("DeveloperName/PackageName")
+install_github("BioAlgs/GM")
 ```
 
 ## Examples
