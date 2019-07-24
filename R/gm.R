@@ -51,16 +51,14 @@
 #' @import doParallel
 
 
-
-
-gm  = function(y, x, q=0.1, family="gaussian", ncores = 1,rep.boot=100, var.est=FALSE, nlambda=100){
+gm  = function(y, x, q=0.1, family="gaussian", ncores = 1,rep.boot=100, var.est=FALSE){
 
     n = length(y)
     p = dim(x)[2]
     x= scale(x)
     lambda_max = 1*max(abs(t(x) %*% y))/(n^(3/2))
     lambda_min = lambda_max / 1e2
-    # nlambda=100
+    nlambda=100
     k = (0:(nlambda-1)) / nlambda
     lambda = lambda_max * (lambda_min/lambda_max)^k
     fit0.lasso = cv.glmnet(x, y, family=family, lambda=lambda, nfold=10,alpha=1)
@@ -74,14 +72,10 @@ gm  = function(y, x, q=0.1, family="gaussian", ncores = 1,rep.boot=100, var.est=
     sigmaz_vec = numeric(p)
     z = matrix(0, nrow=n, ncol=p)
 
-###########################################################
-### Create the GM design
-###########################################################
-    cl <- makeCluster(ncores)
-    registerDoParallel(cl)
-cat('Generate GM designs... ...\n')
+#################################################################
+cat("Generate Gaussian mirrors... ...")
 
-    foreach(j = 1:p) %dopar% {
+    for(j in 1:p){
         jidx =  intersect(which(coef_ast!=0), c(1:p)[-j])
         xj =  x[,j]
         xnj = x[,jidx]
@@ -100,12 +94,12 @@ cat('Generate GM designs... ...\n')
         z[,j] = rnorm(n,0,sqrt(sigmaz_vec[j]))
     }
 
-cat('Calculate mirror statistics... ...\n')
-###########################################################
-###Calculate the mirror statistics
-###########################################################
-    w_vec = numeric(p)
 
+#########################################################################
+cat("Calculate mirror statistics ... ...")
+    w_vec = numeric(p)
+    cl <- makeCluster(ncores)
+    registerDoParallel(cl)
     para_list = foreach(z_idx_i = 1:p,.packages='glmnet') %dopar% {
 
         z_idx = z_idx_i
@@ -153,7 +147,6 @@ cat('Calculate mirror statistics... ...\n')
     stopCluster(cl)
     
     if(var.est==TRUE){
-        cat('Estimate the variance of FDR... ...')
         w_vec =  unlist(lapply(para_list,function(x){x[[1]]}))
         w_boot =  array(unlist(lapply(para_list,function(x){x[[2]]})), c(rep.boot, p)) 
         gm.var = gm_var( w_vec, w_boot, q)$variance
@@ -176,7 +169,6 @@ cat('Calculate mirror statistics... ...\n')
     }else{
         gm_idx = which(est_fdp-0.1>0)[1]-1
     }
-cat('Finish!\n')
 
 gm_selected = which(w_vec!=0)[w_idx[1:gm_idx]]
 
