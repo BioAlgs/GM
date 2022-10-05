@@ -129,7 +129,7 @@ cat("Calculate mirror statistics ... ...")
               z.boot = matrix(rnorm(n*sum(z_indicator),0,sigmaz_vec[z_idx_i]), nrow=n, ncol= sum(z_indicator) )
               xnew.boot = cbind(x[,z_indicator] + z.boot, x[,z_indicator] - z.boot, x[,as.logical(1-z_indicator)])
               y.boot = sample(residual.lasso, n, replace=T) + pred.lasso
-              fit.lasso.boot = glmnet( xnew.boot, y.boot, family="gaussian", lambda=lambda_ast, alpha=1 )
+              fit.lasso.boot = glmnet( xnew.boot, y.boot, family=family, lambda=lambda_ast, alpha=1 )
               
               b11.boot[ind.boot] = coef(fit.lasso.boot)[ 2:(z_idx_len+1) ]
               b12.boot[ind.boot] = coef(fit.lasso.boot)[(z_idx_len+2):(2*z_idx_len+1)]
