@@ -129,7 +129,7 @@ cat("Calculate mirror statistics ... ...")
               z.boot = matrix(rnorm(n*sum(z_indicator),0,sigmaz_vec[z_idx_i]), nrow=n, ncol= sum(z_indicator) )
               xnew.boot = cbind(x[,z_indicator] + z.boot, x[,z_indicator] - z.boot, x[,as.logical(1-z_indicator)])
               y.boot = sample(residual.lasso, n, replace=T) + pred.lasso
-              fit.lasso.boot = glmnet( xnew.boot, y.boot, family="gaussian", lambda=lambda_ast, alpha=1 )
+              fit.lasso.boot = glmnet( xnew.boot, y.boot, family=family, lambda=lambda_ast, alpha=1 )
               
               b11.boot[ind.boot] = coef(fit.lasso.boot)[ 2:(z_idx_len+1) ]
               b12.boot[ind.boot] = coef(fit.lasso.boot)[(z_idx_len+2):(2*z_idx_len+1)]
@@ -149,7 +149,7 @@ cat("Calculate mirror statistics ... ...")
     if(var.est==TRUE){
         w_vec =  unlist(lapply(para_list,function(x){x[[1]]}))
         w_boot =  array(unlist(lapply(para_list,function(x){x[[2]]})), c(rep.boot, p)) 
-        gm.var = gm_var( w_vec, w_boot, q)$variance
+        gm.var = boot_var( w_vec, w_boot, q)$variance
     }else{
         w_vec =  unlist(para_list)
     }
@@ -164,10 +164,10 @@ cat("Calculate mirror statistics ... ...")
         est_fdp[i] = sum(w_vec_nonzero < -cut)/(i+1)
     }
 
-    if(length(which(est_fdp-0.1>0))==0){
+    if(length(which(est_fdp-q>0))==0){
         gm_idx= length(which(w_vec>0))
     }else{
-        gm_idx = which(est_fdp-0.1>0)[1]-1
+        gm_idx = which(est_fdp-q>0)[1]-1
     }
 
 gm_selected = which(w_vec!=0)[w_idx[1:gm_idx]]
